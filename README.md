@@ -23,7 +23,7 @@ Componentes:
 - Microcontrolador: Arduino UNO
 - Luces LED RGB: para representar visualmente el estado del clima
 - Módulo de sonido: (DFPlayer Mini + parlante pequeño)
-- Motor o ventilador pequeño: para simular viento
+- Proyector para mapping
 - Cables, resistencias, protoboard o placa de montaje
 - Script externo en Python (opcional): para la parte de ciencia de datos
 - Fuente de alimentación / batería
@@ -31,13 +31,13 @@ Componentes:
 Climas representados:
 Clima	// Estímulos sensoriales
 
-Soleado //	Luz cálida amarilla + sonido de pájaros
+Soleado //	Luz cálida amarilla + sonido de pájaros + sol en 3D + mapping iluminando el sol
 
-Lluvia //	Luz azul tenue + sonido de gotas
+Lluvia //	Luz azul tenue + sonido de gotas + mapping de lluvia
 
-Tormenta //	Flashes de luz + sonido de truenos 
+Tormenta //	Flashes de luz + sonido de truenos + mapping que oscurece las nubes
 
-Viento //	Ventilador
+Viento // Nubes 3D, mapping sobre las nubes simulando viento
 
 
 
