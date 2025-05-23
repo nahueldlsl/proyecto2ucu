@@ -1,25 +1,37 @@
 # proyecto2ucu
-Panel Sensorial del Clima
+Panel Sensorial del Clima — Ciencia de Datos e Inclusión Sensorial
 
 Descripción:
-El Panel Sensorial del Clima es un proyecto interactivo diseñado para representar distintas condiciones climáticas mediante estímulos visuales, sonoros y táctiles. Pensado como herramienta educativa y sensorial, este panel permite a niños, personas con TEA u otras condiciones, e incluso adultos curiosos, experimentar el clima de forma inmersiva y accesible.
+El Panel Sensorial del Clima es un proyecto que une ciencia de datos y estimulación sensorial para representar las condiciones climáticas de manera accesible y comprensible. Está especialmente diseñado para personas con TEA (Trastorno del Espectro Autista), con el objetivo de ayudarles a entender y anticipar el clima a través de estímulos visuales, sonoros y táctiles.
+A través del uso de datos reales del clima, el sistema interpreta el estado meteorológico actual o estimado, y activa un escenario sensorial acorde, utilizando un Arduino UNO como microcontrolador central.
 
 Objetivos:
-- Representar diferentes estados del clima (sol, lluvia, tormenta, viento, nieve, etc.) mediante luces LED, sonidos ambientales y materiales con diferentes texturas.
-- Fomentar el aprendizaje sensorial y la comprensión del entorno meteorológico.
-- Promover la inclusión y el juego interactivo.
+- Usar ciencia de datos para obtener la información del clima actual o predecible.
+- Facilitar la comprensión del clima mediante estímulos multisensoriales (luces, sonidos, texturas).
+- Crear una herramienta educativa e inclusiva, especialmente pensada para personas con TEA.
 
-Componentes utilizados:
-- Microcontrolador: Arduino Uno / ESP32 / Raspberry Pi Pico (ajustar según lo que uses)
-- LEDs RGB o tiras LED direccionables (para simular el sol, tormentas, etc.)
-- Módulo de sonido (DFPlayer Mini + altavoz, o similar)
-- Motores o ventiladores pequeños (para viento)
-- Materiales táctiles (algodón, papel celofán, tela rugosa, etc.)
-- Sensores opcionales: DHT11/22 para temperatura y humedad, sensor de luz, etc.
+Ciencia de Datos aplicada
+- El proyecto emplea ciencia de datos para:
+- Obtener y procesar datos meteorológicos de fuentes reales (API o datos descargados).
+- Determinar la probabilidad o presencia de ciertos estados climáticos.
+- Comunicar esa información al panel físico para una representación sensorial clara.
+- Este procesamiento se realiza en una PC externa, y el resultado se envía al Arduino UNO para activar el clima correspondiente.
+
+Componentes:
+- Microcontrolador: Arduino UNO
+- Luces LED RGB: para representar visualmente el estado del clima
+- Módulo de sonido: (DFPlayer Mini + parlante pequeño)
+- Motor o ventilador pequeño: para simular viento
+- Cables, resistencias, protoboard o placa de montaje
+- Script externo en Python (opcional): para la parte de ciencia de datos
 - Fuente de alimentación / batería
 
-Climas simulados:
-- Soleado: Luz amarilla cálida + sonido de pájaros
-- Lluvia: Luz azul tenue + sonido de gotas + texturas suaves tipo agua
-- Tormenta: Flash de luz blanca + truenos + vibración o movimiento
-- Viento: Ventilador + movimiento de materiales livianos
+Climas representados:
+Clima	// Estímulos sensoriales
+Soleado //	Luz cálida amarilla + sonido de pájaros
+Lluvia //	Luz azul tenue + sonido de gotas + textura húmeda (imitada)
+Tormenta //	Flashes de luz + sonido de truenos + vibración
+Viento //	Ventilador + movimiento de materiales livianos
+
+
+
