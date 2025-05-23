@@ -24,6 +24,7 @@ Componentes:
 - Luces LED RGB: para representar visualmente el estado del clima
 - Módulo de sonido: (DFPlayer Mini + parlante pequeño)
 - Proyector para mapping
+- Figuras de las condiciones climáticas impresas en 3D
 - Cables, resistencias, protoboard o placa de montaje
 - Script externo en Python (opcional): para la parte de ciencia de datos
 - Fuente de alimentación / batería
