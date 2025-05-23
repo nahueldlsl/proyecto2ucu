@@ -3,14 +3,17 @@ Panel Sensorial del Clima — Ciencia de Datos e Inclusión Sensorial
 
 Descripción:
 
-El Panel Sensorial del Clima es un proyecto que une ciencia de datos y estimulación sensorial para representar las condiciones climáticas de manera accesible y comprensible. Está especialmente diseñado para personas con TEA (Trastorno del Espectro Autista), con el objetivo de ayudarles a entender y anticipar el clima a través de estímulos visuales, sonoros y táctiles.
+Este proyecto utiliza ciencia de datos para acceder, almacenar y procesar información del clima durante un período de siete días (tres pasados, el actual y tres futuros). Los datos son extraídos de fuentes confiables mediante una API meteorológica, y convertidos en estímulos sensoriales simples, ayudando a niños con TEA a anticipar y entender el comportamiento del clima en su entorno.
 
 A través del uso de datos reales del clima, el sistema interpreta el estado meteorológico actual o estimado, y activa un escenario sensorial acorde, utilizando un Arduino UNO como microcontrolador central.
 
 Objetivos:
 - Usar ciencia de datos para obtener la información del clima actual o predecible.
+Esto permite a los niños:
+- Recordar qué clima hubo (refuerzo de memoria).
 - Facilitar la comprensión del clima mediante estímulos multisensoriales (luces, sonidos, texturas).
 - Crear una herramienta educativa e inclusiva, especialmente pensada para personas con TEA.
+- Anticiparse al clima próximo (muy útil para la rutina y organización emocional).
 
 Ciencia de Datos aplicada:
 - El proyecto emplea ciencia de datos para:
