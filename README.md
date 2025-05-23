@@ -30,9 +30,12 @@ Climas representados:
 Clima	// Estímulos sensoriales
 
 Soleado //	Luz cálida amarilla + sonido de pájaros
-Lluvia //	Luz azul tenue + sonido de gotas + textura húmeda (imitada)
-Tormenta //	Flashes de luz + sonido de truenos + vibración
-Viento //	Ventilador + movimiento de materiales livianos
+
+Lluvia //	Luz azul tenue + sonido de gotas
+
+Tormenta //	Flashes de luz + sonido de truenos 
+
+Viento //	Ventilador
 
 
 
