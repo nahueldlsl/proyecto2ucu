@@ -1,3 +1,10 @@
+#include <IRremote.h>
+#include <Servo.h>
+  const int pinReceptorIR = 2;
+  const int pinServo = 9;
+  Servo miServo;
+  bool estaEn180 = false;
+
 void setup() {
   Serial.begin(9600); // Inicia la comunicación serial
   IrReceiver.begin(pinReceptorIR, ENABLE_LED_FEEDBACK);
