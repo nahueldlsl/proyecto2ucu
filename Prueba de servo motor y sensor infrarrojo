@@ -1,0 +1,36 @@
+void setup() {
+  Serial.begin(9600); // Inicia la comunicación serial
+  IrReceiver.begin(pinReceptorIR, ENABLE_LED_FEEDBACK);
+  miServo.attach(pinServo);
+  // Opcional: Mover el servo a una posición inicial para verificar que funciona
+  // miServo.write(90); 
+  // delay(1000);
+  // miServo.write(0);
+  // delay(1000);
+  // miServo.write(90);
+
+
+  Serial.println("Receptor IR iniciado. Presione botones en el control remoto.");
+}
+void loop() {
+  if (IrReceiver.decode()) {
+    unsigned long codigo = IrReceiver.decodedIRData.command;
+    Serial.print("Código IR recibido (HEX): 0x");
+    Serial.println(codigo, HEX); // Imprime el código en formato hexadecimal
+    Serial.print("Código IR recibido (DEC): ");
+    Serial.println(codigo);      // Imprime el código en formato decimal
+
+
+    // Aquí puedes decidir qué hacer con el código, o cambiar 0xE5 por el código que veas
+    if (codigo == 0xE5) { // Reemplaza 0xE5 si es necesario por el código que veas del botón que quieres usar
+      if (estaEn180) {
+        miServo.write(0);
+      } else {
+        miServo.write(180);
+      }
+      estaEn180 = !estaEn180;
+      delay(500);
+    }
+    IrReceiver.resume(); // Listo para recibir el próximo
+  }
+}
