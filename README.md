@@ -1,47 +1,39 @@
-# proyecto2ucu
+#Proyecto2UCU
 Panel Sensorial del Clima — Ciencia de Datos e Inclusión Sensorial
 
-Descripción:
+**Descripción**
+Este proyecto combina ciencia de datos, electrónica y diseño inclusivo para ayudar a niños con Trastorno del Espectro Autista (TEA) a anticipar y comprender el clima mediante estímulos sensoriales visuales. El sistema permite representar el clima estimado para los próximos siete días (el día actual y seis días posteriores), de forma accesible y lúdica.
+Gracias a un módulo Arduino con conexión WiFi, el dispositivo se conecta a internet, obtiene la dirección IP y accede a datos meteorológicos reales desde una API. Luego, interpreta la información y activa estímulos visuales asociados a cada estado del clima, facilitando la comprensión mediante objetos impresos en 3D y un arcoíris móvil como homenaje simbólico a la neurodiversidad.
 
-Este proyecto utiliza ciencia de datos para acceder, almacenar y procesar información del clima durante un período de siete días (tres pasados, el actual y tres futuros). Los datos son extraídos de fuentes confiables mediante una API meteorológica, y convertidos en estímulos sensoriales simples, ayudando a niños con TEA a anticipar y entender el comportamiento del clima en su entorno.
+**Objetivos**
+- Acceder a datos climáticos reales y predecibles mediante ciencia de datos.
+- Representar el clima futuro de forma visual y tangible.
+- Favorecer la anticipación y la organización emocional en niños con TEA.
+- Promover la comprensión del entorno mediante recursos sensoriales visuales.
+- Estimular la interacción a través de un sistema sencillo y atractivo.
 
-A través del uso de datos reales del clima, el sistema interpreta el estado meteorológico actual o estimado, y activa un escenario sensorial acorde, utilizando un Arduino UNO como microcontrolador central.
+**Ciencia de Datos Aplicada**
+- Obtención de datos: El módulo Arduino con WiFi se conecta a una API meteorológica.
+- Procesamiento: El código incorporado interpreta los datos y asocia el estado climático a un día específico.
+- Representación sensorial: Al presionar un botón del control remoto, se activa el estímulo correspondiente al día seleccionado.
 
-Objetivos:
-- Usar ciencia de datos para obtener la información del clima actual o predecible.
-Esto permite a los niños:
-- Recordar qué clima hubo (refuerzo de memoria).
-- Facilitar la comprensión del clima mediante estímulos multisensoriales (luces, sonidos, texturas).
-- Crear una herramienta educativa e inclusiva, especialmente pensada para personas con TEA.
-- Anticiparse al clima próximo (muy útil para la rutina y organización emocional).
+**Componentes**
+- Microcontrolador: Arduino UNO con módulo WiFi
+- Control remoto por infrarrojo: Para seleccionar el día deseado
+- Receptor IR: Conectado al Arduino
+- Luces LED RGB: Para iluminar objetos según el clima
+- Servomotor: Para mover un arcoíris 3D como símbolo del TEA (movimiento de 180°)
+- **Objetos impresos en 3D:**
+Sol
+Nube
+Nube con sol
+Nube con lluvia (con tiras LED para simular la lluvia)
+Nube con granizo
+- Proyector para Mapping: Representación animada del cambio climático (ej. sol saliendo/ocultándose)
+- Letras impresas en 3D (opcional): Para proyectar sobre ellas y reforzar el título del proyecto
 
-Ciencia de Datos aplicada:
-- El proyecto emplea ciencia de datos para:
-- Obtener y procesar datos meteorológicos de fuentes reales (API o datos descargados).
-- Determinar la probabilidad o presencia de ciertos estados climáticos.
-- Comunicar esa información al panel físico para una representación sensorial clara.
-- Este procesamiento se realiza en una PC externa, y el resultado se envía al Arduino UNO para activar el clima correspondiente.
-
-Componentes:
-- Microcontrolador: Arduino UNO
-- Luces LED RGB: para representar visualmente el estado del clima
-- Módulo de sonido: (DFPlayer Mini + parlante pequeño)
-- Proyector para mapping
-- Figuras de las condiciones climáticas impresas en 3D
-- Cables, resistencias, protoboard o placa de montaje
-- Script externo en Python (opcional): para la parte de ciencia de datos
-- Fuente de alimentación / batería
-
-Climas representados:
-Clima	// Estímulos sensoriales
-
-Soleado //	Luz cálida amarilla + sonido de pájaros + sol en 3D + mapping iluminando el sol
-
-Lluvia //	Luz azul tenue + sonido de gotas + mapping de lluvia
-
-Tormenta //	Flashes de luz + sonido de truenos + mapping que oscurece las nubes
-
-Viento // Nubes 3D, mapping sobre las nubes simulando viento
-
-
-
+**Diferencias respecto a versiones anteriores**
+Ya no se representan sonidos.
+El sistema no muestra días anteriores, solo el día actual y los 6 siguientes.
+Se eliminó la necesidad de una PC externa: todo el proceso ocurre en el Arduino con WiFi.
+Se incorpora un arcoíris móvil como símbolo del TEA.
