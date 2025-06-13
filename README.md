@@ -25,11 +25,11 @@ Gracias a un módulo Arduino con conexión WiFi, el dispositivo se conecta a int
 - Luces LED RGB: Para iluminar objetos según el clima
 - Servomotor: Para mover un arcoíris 3D como símbolo del TEA (movimiento de 180°)
 - **Objetos impresos en 3D:**
-Sol
-Nube
-Nube con sol
-Nube con lluvia (con tiras LED para simular la lluvia)
-Nube con granizo
+. Sol
+. Nube
+. Nube con sol
+. Nube con lluvia (con tiras LED para simular la lluvia)
+. Nube con granizo
 - Proyector para Mapping: Representación animada del cambio climático (ej. sol saliendo/ocultándose)
 - Letras impresas en 3D (opcional): Para proyectar sobre ellas y reforzar el título del proyecto
 
