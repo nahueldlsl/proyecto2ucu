@@ -2,6 +2,7 @@
 Panel Sensorial del Clima — Ciencia de Datos e Inclusión Sensorial
 
 **Descripción**
+
 Este proyecto combina ciencia de datos, electrónica y diseño inclusivo para ayudar a niños con Trastorno del Espectro Autista (TEA) a anticipar y comprender el clima mediante estímulos sensoriales visuales. El sistema permite representar el clima estimado para los próximos siete días (el día actual y seis días posteriores), de forma accesible y lúdica.
 Gracias a un módulo Arduino con conexión WiFi, el dispositivo se conecta a internet, obtiene la dirección IP y accede a datos meteorológicos reales desde una API. Luego, interpreta la información y activa estímulos visuales asociados a cada estado del clima, facilitando la comprensión mediante objetos impresos en 3D y un arcoíris móvil como homenaje simbólico a la neurodiversidad.
 
@@ -33,7 +34,8 @@ Nube con granizo
 - Letras impresas en 3D (opcional): Para proyectar sobre ellas y reforzar el título del proyecto
 
 **Diferencias respecto a versiones anteriores**
-Ya no se representan sonidos.
-El sistema no muestra días anteriores, solo el día actual y los 6 siguientes.
-Se eliminó la necesidad de una PC externa: todo el proceso ocurre en el Arduino con WiFi.
-Se incorpora un arcoíris móvil como símbolo del TEA.
+
+- Ya no se representan sonidos.
+- El sistema no muestra días anteriores, solo el día actual y los 6 siguientes.
+- Se eliminó la necesidad de una PC externa: todo el proceso ocurre en el Arduino con WiFi.
+- Se incorpora un arcoíris móvil como símbolo del TEA.
