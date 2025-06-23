@@ -44,13 +44,20 @@ const int irRecvPin = D7;
 IRrecv irrecv(irRecvPin);
 decode_results results;
 
-// --- CÓDIGOS IR DE EJEMPLO ---
-#define IR_BUTTON_1 0xFF30CF
-#define IR_BUTTON_2 0xFF18E7
-#define IR_BUTTON_3 0xFF7A85
-#define IR_BUTTON_4 0xFF10EF
-#define IR_BUTTON_5 0xFF38C7
-#define IR_BUTTON_6 0xFF5AA5
+// --- INSTRUCCIONES IMPORTANTES PARA EL CONTROL REMOTO ---
+// El código de abajo ya imprime en el "Monitor Serie" el código de cada botón que presionas.
+// 1. Abre el Monitor Serie.
+// 2. Presiona el botón "1" de tu control y mira el código que aparece (ej: 0xFF6897).
+// 3. Reemplaza el código de ejemplo de IR_BUTTON_1 con el que viste.
+// 4. Repite el proceso para los botones del 2 al 6.
+
+// --- CÓDIGOS IR DE EJEMPLO (¡DEBES CAMBIARLOS POR LOS DE TU CONTROL!) ---
+#define IR_BUTTON_1 0xFF6897 // Reemplaza este código con el de tu botón "1"
+#define IR_BUTTON_2 0xFF9867 // Reemplaza este código con el de tu botón "2"
+#define IR_BUTTON_3 0xFFB04F // Reemplaza este código con el de tu botón "3"
+#define IR_BUTTON_4 0xFF30CF// Reemplaza este código con el de tu botón "4"
+#define IR_BUTTON_5 0xFF18E7// Reemplaza este código con el de tu botón "5"
+#define IR_BUTTON_6 0xFF7A85 // Reemplaza este código con el de tu botón "6"
 
 // --- Intervalo de actualización de clima ---
 unsigned long previousMillis = 0;
@@ -105,7 +112,11 @@ void loop() {
   }
 
   if (irrecv.decode(&results)) {
-    if (results.value != 0xFFFFFFFFFFFFFFFF) {
+    if (results.value != 0xFFFFFFFFFFFFFFFF) { // Ignorar códigos de repetición
+        // Esta línea imprime el código del botón que presionaste. Úsala para configurar los botones.
+        Serial.print("Código IR recibido: 0x");
+        Serial.println(results.value, HEX);
+        
         switch (results.value) {
           case IR_BUTTON_1: updateDisplaysForDay(0); break;
           case IR_BUTTON_2: updateDisplaysForDay(1); break;
@@ -146,7 +157,6 @@ void updateDisplaysForDay(int dayOffset) {
   lcd.print(dayNames[forecastDayIndex]);
   
   lcd.setCursor(0, 1);
-  lcd.print("Clima: ");
   lcd.print(getWeatherDescriptionString(code));
 
   // Actualizar LED
