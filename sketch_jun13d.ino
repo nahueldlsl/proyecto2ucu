@@ -14,11 +14,17 @@ const char* ssid = "caliope";
 const char* password = "sinlugar";
 
 // --- Configuración Open-Meteo ---
-String openMeteoUrl = "http://api.open-meteo.com/v1/forecast?latitude=-34.898&longitude=-54.952&hourly=weather_code&timezone=America/Montevideo";
+// NUEVO: Se añade "&daily=weather_code,precipitation_probability_mean" para obtener los códigos de clima y la probabilidad de lluvia.
+String openMeteoUrl = "http://api.open-meteo.com/v1/forecast?latitude=-34.898&longitude=-54.952&daily=weather_code,precipitation_probability_mean&timezone=America/Montevideo";
 
-// --- Array para 7 días de pronóstico ---
+// --- Arrays para 7 días de pronóstico ---
 int dailyWeatherCodes[7];
+int dailyPrecipitation[7]; // NUEVO: Array para guardar la probabilidad de lluvia de cada día.
 const char* dayNames[7] = {"Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"};
+
+// --- Variables de Estado ---
+int currentDayOffset = 0;   // NUEVO: Guarda el último día que se seleccionó (0=hoy, 1=mañana, etc.).
+bool showProbability = false; // NUEVO: Controla si se muestra la descripción del clima o la probabilidad de lluvia.
 
 // --- Configuración NTP (Servidor de Hora) ---
 const char* ntpServer = "pool.ntp.org";
@@ -32,32 +38,26 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 const int ledPinSoleado = D0;
 const int ledPinParcialmente = D8;
 const int ledPinNublado = D3;
-// const int ledPinNiebla = D4; // Pin para Niebla eliminado
 const int ledPinLluvia = D5;
 const int ledPinTormenta = D6;
-// Se actualiza el array de LEDs para reflejar el cambio.
 const int ledPins[] = {ledPinSoleado, ledPinParcialmente, ledPinNublado, ledPinLluvia, ledPinTormenta};
-const int numLeds = 5; // Ahora son 5 LEDs activos
+const int numLeds = 5;
 
 // --- Definiciones de Pines para IR ---
 const int irRecvPin = D7;
 IRrecv irrecv(irRecvPin);
 decode_results results;
 
-// --- INSTRUCCIONES IMPORTANTES PARA EL CONTROL REMOTO ---
-// El código de abajo ya imprime en el "Monitor Serie" el código de cada botón que presionas.
-// 1. Abre el Monitor Serie.
-// 2. Presiona el botón "1" de tu control y mira el código que aparece (ej: 0xFF6897).
-// 3. Reemplaza el código de ejemplo de IR_BUTTON_1 con el que viste.
-// 4. Repite el proceso para los botones del 2 al 6.
-
 // --- CÓDIGOS IR DE EJEMPLO (¡DEBES CAMBIARLOS POR LOS DE TU CONTROL!) ---
-#define IR_BUTTON_1 0xFF6897 // Reemplaza este código con el de tu botón "1"
-#define IR_BUTTON_2 0xFF9867 // Reemplaza este código con el de tu botón "2"
-#define IR_BUTTON_3 0xFFB04F // Reemplaza este código con el de tu botón "3"
-#define IR_BUTTON_4 0xFF30CF// Reemplaza este código con el de tu botón "4"
-#define IR_BUTTON_5 0xFF18E7// Reemplaza este código con el de tu botón "5"
-#define IR_BUTTON_6 0xFF7A85 // Reemplaza este código con el de tu botón "6"
+#define IR_BUTTON_1 0xFF6897 // Botón "1"
+#define IR_BUTTON_2 0xFF9867 // Botón "2"
+#define IR_BUTTON_3 0xFFB04F // Botón "3"
+#define IR_BUTTON_4 0xFF30CF // Botón "4"
+#define IR_BUTTON_5 0xFF18E7 // Botón "5"
+#define IR_BUTTON_6 0xFF7A85 // Botón "6"
+// NUEVO: Códigos para los botones de navegación vertical.
+#define IR_BUTTON_ARRIBA 0xFF629D // Reemplaza con el código de tu botón "arriba" o "CH+"
+#define IR_BUTTON_ABAJO  0xFFA857 // Reemplaza con el código de tu botón "abajo" o "CH-"
 
 // --- Intervalo de actualización de clima ---
 unsigned long previousMillis = 0;
@@ -75,17 +75,17 @@ void setup() {
   lcd.print("Iniciando...");
   
   irrecv.enableIRIn();
-  // Se ajusta el bucle para el nuevo número de LEDs
+
   for (int i = 0; i < numLeds; i++) {
     pinMode(ledPins[i], OUTPUT);
     digitalWrite(ledPins[i], LOW);
   }
-  // El pin D4 que era del LED de niebla ahora no se usa para esto.
-  pinMode(D4, OUTPUT);
+  pinMode(D4, OUTPUT); // Pin D4 (antes Niebla) se mantiene como salida para apagarlo.
   digitalWrite(D4, LOW);
 
   for (int i = 0; i < 7; i++) {
     dailyWeatherCodes[i] = -1;
+    dailyPrecipitation[i] = -1; // NUEVO: Inicializar el array de precipitación.
   }
 
   // Conexión a WiFi
@@ -113,33 +113,47 @@ void loop() {
 
   if (irrecv.decode(&results)) {
     if (results.value != 0xFFFFFFFFFFFFFFFF) { // Ignorar códigos de repetición
-        // Esta línea imprime el código del botón que presionaste. Úsala para configurar los botones.
-        Serial.print("Código IR recibido: 0x");
-        Serial.println(results.value, HEX);
-        
-        switch (results.value) {
-          case IR_BUTTON_1: updateDisplaysForDay(0); break;
-          case IR_BUTTON_2: updateDisplaysForDay(1); break;
-          case IR_BUTTON_3: updateDisplaysForDay(2); break;
-          case IR_BUTTON_4: updateDisplaysForDay(3); break;
-          case IR_BUTTON_5: updateDisplaysForDay(4); break;
-          case IR_BUTTON_6: updateDisplaysForDay(5); break;
-        }
+      Serial.print("Código IR recibido: 0x");
+      Serial.println(results.value, HEX);
+      
+      switch (results.value) {
+        // Al presionar un día, se muestra la descripción del clima por defecto.
+        case IR_BUTTON_1: showProbability = false; updateDisplaysForDay(0); break;
+        case IR_BUTTON_2: showProbability = false; updateDisplaysForDay(1); break;
+        case IR_BUTTON_3: showProbability = false; updateDisplaysForDay(2); break;
+        case IR_BUTTON_4: showProbability = false; updateDisplaysForDay(3); break;
+        case IR_BUTTON_5: showProbability = false; updateDisplaysForDay(4); break;
+        case IR_BUTTON_6: showProbability = false; updateDisplaysForDay(5); break;
+
+        // NUEVO: Casos para los nuevos botones.
+        case IR_BUTTON_ABAJO:
+          showProbability = true;      // Cambia el modo a "mostrar probabilidad".
+          updateDisplaysForDay(currentDayOffset); // Refresca la pantalla para el día actual.
+          break;
+        case IR_BUTTON_ARRIBA:
+          showProbability = false;     // Cambia el modo a "mostrar descripción".
+          updateDisplaysForDay(currentDayOffset); // Refresca la pantalla para el día actual.
+          break;
+      }
     }
     irrecv.resume();
   }
 }
 
 void updateDisplaysForDay(int dayOffset) {
+  // NUEVO: Actualizamos la variable global que recuerda el día seleccionado.
+  currentDayOffset = dayOffset;
+  
   // Apagar todos los LEDs
   for (int i = 0; i < numLeds; i++) {
     digitalWrite(ledPins[i], LOW);
   }
-  digitalWrite(D4, LOW); // Apagar también el pin del LED que ya no se usa.
+  digitalWrite(D4, LOW);
 
   if (dayOffset < 0 || dayOffset > 6) return;
   
   int code = dailyWeatherCodes[dayOffset];
+  int precip = dailyPrecipitation[dayOffset]; // NUEVO: Obtener la probabilidad de lluvia.
   
   struct tm timeinfo;
   if(!getLocalTime(&timeinfo)){
@@ -148,18 +162,24 @@ void updateDisplaysForDay(int dayOffset) {
   int currentDayOfWeek = timeinfo.tm_wday;
   int forecastDayIndex = (currentDayOfWeek + dayOffset) % 7;
   
-  Serial.printf("Boton presionado para offset %d. Clima: %d. Dia: %s\n", dayOffset, code, dayNames[forecastDayIndex]);
+  Serial.printf("Offset: %d. Dia: %s. Clima: %d. Prob. Lluvia: %d%%\n", dayOffset, dayNames[forecastDayIndex], code, precip);
 
-  // Actualizar Pantalla LCD
+  // --- Actualizar Pantalla LCD ---
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Dia: ");
   lcd.print(dayNames[forecastDayIndex]);
   
   lcd.setCursor(0, 1);
-  lcd.print(getWeatherDescriptionString(code));
+  // NUEVO: Lógica para decidir qué mostrar en la segunda línea del LCD.
+  if (showProbability) {
+    String probStr = "Lluvia: " + String(precip) + "%";
+    lcd.print(probStr);
+  } else {
+    lcd.print(getWeatherDescriptionString(code));
+  }
 
-  // Actualizar LED
+  // --- Actualizar LED (esta lógica no cambia) ---
   switch (code) {
     case 0:
       digitalWrite(ledPinSoleado, HIGH);
@@ -171,11 +191,6 @@ void updateDisplaysForDay(int dayOffset) {
     case 3:
       digitalWrite(ledPinNublado, HIGH);
       break;
-    // --- LÓGICA PARA NIEBLA ELIMINADA ---
-    // case 45:
-    // case 48:
-    //   digitalWrite(ledPinNiebla, HIGH);
-    //   break;
     case 51: case 53: case 55:
     case 61: case 63: case 65:
     case 80: case 81: case 82:
@@ -187,7 +202,7 @@ void updateDisplaysForDay(int dayOffset) {
       digitalWrite(ledPinTormenta, HIGH);
       break;
     default:
-      // Para códigos no definidos (como Niebla ahora), no se enciende ningún LED.
+      // Para códigos no definidos (como Niebla), no se enciende ningún LED.
       break;
   }
 }
@@ -212,30 +227,29 @@ void getWeatherData() {
     WiFiClient client;
     HTTPClient http;
 
+    Serial.println("Obteniendo datos del clima...");
     if (http.begin(client, openMeteoUrl)) {
       int httpCode = http.GET();
       if (httpCode == HTTP_CODE_OK) {
         String payload = http.getString();
-        DynamicJsonDocument doc(16384);
+        DynamicJsonDocument doc(4096); // Aumentar tamaño por si acaso
         DeserializationError error = deserializeJson(doc, payload);
 
         if (!error) {
-          if (doc.containsKey("hourly") && doc["hourly"].containsKey("time") && doc["hourly"].containsKey("weather_code")) {
-            JsonArray timestamps = doc["hourly"]["time"];
-            JsonArray codes = doc["hourly"]["weather_code"];
-            int dayIndex = 0;
-            for (int i = 0; i < timestamps.size(); i++) {
-              if (String(timestamps[i]).endsWith("T12:00")) {
-                if (dayIndex < 7) {
-                  dailyWeatherCodes[dayIndex] = codes[i];
-                  dayIndex++;
-                } else { break; }
-              }
+          // NUEVO: Se verifica que existan los nuevos datos en la respuesta JSON.
+          if (doc.containsKey("daily") && doc["daily"].containsKey("time") && doc["daily"].containsKey("weather_code") && doc["daily"].containsKey("precipitation_probability_mean")) {
+            JsonArray codes = doc["daily"]["weather_code"];
+            JsonArray precipitations = doc["daily"]["precipitation_probability_mean"]; // NUEVO: Se extrae el array de probabilidades.
+            
+            for (int i = 0; i < 7; i++) {
+                if (i < codes.size() && i < precipitations.size()) {
+                    dailyWeatherCodes[i] = codes[i];
+                    dailyPrecipitation[i] = precipitations[i]; // NUEVO: Se guarda la probabilidad.
+                }
             }
             Serial.println("\n--- Pronostico de 7 dias actualizado ---");
             for (int i = 0; i < 7; i++) {
-              Serial.printf("Dia %d (offset): Codigo %d -> ", i, dailyWeatherCodes[i]);
-              printWeatherDescription(dailyWeatherCodes[i]);
+              Serial.printf("Dia %d: Codigo %d (%s), Prob. Lluvia: %d%%\n", i, dailyWeatherCodes[i], getWeatherDescriptionString(dailyWeatherCodes[i]).c_str(), dailyPrecipitation[i]);
             }
             Serial.println("----------------------------------------");
             
@@ -244,6 +258,8 @@ void getWeatherData() {
             lcd.print("Pronostico OK!");
             lcd.setCursor(0, 1);
             lcd.print("Usa el control");
+          } else {
+              Serial.println("Error: Faltan datos en la respuesta JSON de la API.");
           }
         } else {
             Serial.print(F("deserializeJson() falló: "));
@@ -254,9 +270,7 @@ void getWeatherData() {
       }
       http.end();
     }
+  } else {
+      Serial.println("WiFi no conectado. No se pueden obtener datos.");
   }
-}
-
-void printWeatherDescription(int code) {
-  Serial.println(getWeatherDescriptionString(code));
 }
