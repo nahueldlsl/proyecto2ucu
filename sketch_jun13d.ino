@@ -206,7 +206,8 @@ void updateDisplaysForDay(int dayOffset) {
   
   lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print(displayName);
+  // MODIFICADO: Añadido el prefijo "Dia: "
+  lcd.print("Dia: " + displayName);
   
   lcd.setCursor(0, 1);
   if (showProbability) {
