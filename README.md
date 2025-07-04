@@ -102,5 +102,6 @@ Este repositorio contiene:
 
 Proyecto desarrollado en el marco del Taller Interdisciplinario de Ingeniería (TI3) – Universidad Católica del Uruguay.  
 Estudiantes: De Los Santos, Nahuel; Gallinal, Facundo; Muñoz, Sofía; Nicora, Brahian 
+
 Docentes:  Cilintano, Augusto; Duarte, Gonzalo; Serrano, Vanessa
 
